@@ -1,6 +1,14 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
+import dotenv from "dotenv";
+import db from "./db.js";
+
+dotenv.config();
+
+const port = process.env.PORT || 4000;
+const db_host = process.env.DB_HOST;
+
 const typeDefs = `#graphql
   type Book {
     title: String
@@ -28,6 +36,9 @@ const resolvers = {
       books: () => books,
     },
   };
+
+
+db.connect(db_host);
 
 const server = new ApolloServer({
     typeDefs,
