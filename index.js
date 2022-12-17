@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
+import { GraphQLScalarType, Kind } from 'graphql';
 
 import models from './src/models.js'
 
@@ -12,10 +13,14 @@ const port = process.env.PORT || 4000;
 const db_host = process.env.DB_HOST;
 
 const typeDefs = `#graphql
+  scalar DateTime
+
   type Book {
-    id: ID
-    title: String
-    author: String
+    id: ID!
+    title: String!
+    author: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type Query {
@@ -29,7 +34,26 @@ const typeDefs = `#graphql
 	}
 `;
 
+// 참조(https://www.apollographql.com/docs/apollo-server/schema/custom-scalars/)
+const dateScalar = new GraphQLScalarType({
+  name: 'DateTime',
+  description: 'DateTime custom scalar type',
+  serialize(value) {
+    return new Date(value).toISOString();
+  },
+  parseValue(value) {
+    return new Date(value);
+  },
+  parseLiteral(ast) {
+    if (ast.kind === Kind.INT) {
+      return new Date(parseInt(ast.value, 10));
+    }
+    return null;
+  },
+});
+
 const resolvers = {
+  DateTime: dateScalar,
   Query: {
     books: async () => {
       //console.log(process.env.DB_HOST);
@@ -43,7 +67,7 @@ const resolvers = {
     newBook: async (parent, args) => {
       return await models.Book.create({
         title: args.title,
-        author: args.author
+        author: args.author,
       });
     },
     delBook: async (parent, args) => {
