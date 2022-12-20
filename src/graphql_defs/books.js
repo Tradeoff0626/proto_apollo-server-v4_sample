@@ -25,7 +25,22 @@ const resolvers = {
               author: args.author,
             });
           },
-          delBook: async (parent, args, { models }) => {
+        editBook: async (parent, { id, title }, { models }) => {
+            return await models.Book.findOneAndUpdate(
+                {
+                    _id: id,
+                },
+                {
+                    $set: {
+                        title
+                    }
+                },
+                {
+                    new: true
+                }
+            )
+        }, 
+        delBook: async (parent, args, { models }) => {
             const delBookObj = await models.Book.findById(args.id);
             if(delBookObj) await models.Book.findOneAndDelete({_id: args.id});
             return delBookObj;
