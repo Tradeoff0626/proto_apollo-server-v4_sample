@@ -8,7 +8,7 @@ const db = {
     //mongoose.set("useUnifiedTopology", true);
     mongoose.set("strictQuery", false);
     
-    mongoose.connect(process.env.DB_HOST);
+    mongoose.connect(DB_HOST);
     mongoose.connection.on("error", (err) => {
       console.log(err);
       console.log(

@@ -1,7 +1,7 @@
 const typeDefs = `#graphql
     type Query {
-    books: [Book]
-    book(id: ID!): Book!
+        books: [Book]
+        book(id: ID!): Book!
     }
 `;
 
