@@ -6,6 +6,8 @@ import queries from './graphql_defs/_queries.js';
 import mutations from './graphql_defs/_mutations.js';
 import books from './graphql_defs/books.js'
 
+import models from './models.js';
+
 import dotenv from "dotenv";
 import db from "./db.js";
 
@@ -36,6 +38,9 @@ const server = new ApolloServer({
 
 const { url } = await startStandaloneServer(server, {
     listen: { port: port },
+    context: () => {
+      return { models };
+    }
  });
   
  console.log(`🚀  Server ready at: ${url}`);
