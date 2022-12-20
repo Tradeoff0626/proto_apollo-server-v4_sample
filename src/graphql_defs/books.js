@@ -1,3 +1,7 @@
+// Book 객체에 관련된 정보만 정의된 샘플 파일
+
+// Book에 사용되는 타입 정의 파일
+// mongoose에서 기본적으로 ID 및 timestamp관련 컬럼(createdAt, updatedAt)이 정의되므로 추가가 필요.
 const typeDefs = `#graphql
     type Book {
     id: ID!
@@ -8,8 +12,13 @@ const typeDefs = `#graphql
     }
 `;
 
+// Book의 기능 구현부
+// Query 및 Mutation의 arguments는 (parent, args, context, info)가 사용됨.
+// args는 각 GraphQL 호출 시 넘겨지는 파라미터 값, context는 서버 어플리케이션에서 넘겨지는 정보가 넘어옴.
+// 구현 함수는 mongoose 문서 참조.(https://mongoosejs.com/docs/api.html)
 const resolvers = {
     Query: {
+        //Book 전체 조회
         books: async (parent, args, { models }) => {
             //console.log(process.env.DB_HOST);
             return await models.Book.find();
